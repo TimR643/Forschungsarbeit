@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="panda">
+
+
+  <!-- Nur das Makro laden, nicht die komplette Instanz -->
+  <xacro:include filename="$(find franka_description)/robots/common/franka_robot.xacro" />
+  <xacro:include filename="$(find realsense2_description)/urdf/_d435_2.urdf.xacro" />
+
+  <!-- Franka Roboter aufrufen-->
+  <xacro:franka_robot 
+      gazebo="true"
+      arm_id="panda" 
+      joint_limits="${xacro.load_yaml('$(find franka_description)/robots/panda/joint_limits.yaml')}"
+      hand="true" 
+      parent="world" 
+      xyz="0 0 0" 
+      rpy="0 0 0" />
+
+  <!-- Kamera hinzufügen -->
+<xacro:sensor_d435 parent="panda_hand">
+  <origin xyz="0.08 0 -0.02" rpy="0 -1.57 0"/>
+</xacro:sensor_d435>
+
+
+
+</robot>

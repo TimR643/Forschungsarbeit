@@ -1,0 +1,15 @@
+<launch>
+  <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+    <arg name="color_width" value="640" />
+    <arg name="color_height" value="480" />
+    <arg name="color_fps" value="15" />
+    <arg name="enable_depth" value="true" />
+    <arg name="depth_width" value="640" />
+    <arg name="depth_height" value="480" />
+  </include>
+
+
+  <include file="$(find panda_moveit_config)/launch/franka_control.launch" pass_all_args="true">
+    <arg name="robot_ip" value="172.16.0.2" />
+  </include>
+</launch>

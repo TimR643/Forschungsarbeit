@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Umschaltparameter -->
+  <arg name="use_sim" default="true" />  <!-- true = Gazebo Simulation, false = realer Roboter -->
+
+  <!-- Allgemeine Parameter -->
+  <arg name="pipeline" default="ompl" />
+  <arg name="load_gripper" default="true" />
+  <arg name="transmission" default="effort" />
+  <arg name="headless" default="false" />
+  <arg name="paused" default="false" />
+  <arg name="gazebo_gui" default="true" />
+  <arg name="rviz" default="false" />
+  <arg name="robot_ip" default="172.16.0.2" />  <!-- Setze hier die IP deines Roboters -->
+
+  <!-- Welt & Roboterspezifikationen -->
+  <arg name="world" default="$(find main_task)/worlds/dummy_pick_and_place_world_4.world" />
+  <arg name="robot" default="panda" />
+  <arg name="arm_id" default="$(arg robot)" />
+  <arg name="use_gripper" default="true" />
+  <arg name="controller" default="$(arg transmission)_joint_trajectory_controller" />
+  <arg name="interactive_marker" default="$(eval arg('controller') == 'cartesian_impedance_example_controller')" />
+  <arg name="unpause" value="$(eval '' if arg('paused') else '-unpause')" />
+
+  <!-- Gazebo Launch -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" if="$(arg use_sim)">
+    <arg name="world_name" value="$(arg world)" />
+    <arg name="paused" value="true" />
+    <arg name="gui" value="$(eval not arg('headless'))" />
+    <arg name="use_sim_time" value="true" />
+  </include>
+
+  <!-- Roboterbeschreibung -->
+  <param name="robot_description"
+         command="xacro $(find main_task)/urdf/panda_and_camera.urdf.xacro" />
+
+  <!-- Nur für Simulation: Hardware-Simulation + Controller -->
+  <rosparam file="$(find franka_gazebo)/config/franka_hw_sim.yaml" subst_value="true" if="$(arg use_sim)" />
+  <rosparam file="$(find franka_gazebo)/config/sim_controllers.yaml" subst_value="true" if="$(arg use_sim)" />
+  <param name="m_ee" value="0.76" if="$(arg use_gripper)" />
+
+  <!-- Anfangspositionen (nur für Simulation) -->
+  <arg name="initial_joint_positions" default="
+    -J $(arg arm_id)_joint1 0
+    -J $(arg arm_id)_joint2 -0.443
+    -J $(arg arm_id)_joint3 0
+    -J $(arg arm_id)_joint4 -1.920
+    -J $(arg arm_id)_joint5 0
+    -J $(arg arm_id)_joint6 0.025
+    -J $(arg arm_id)_joint7 0.800
+    -J $(arg arm_id)_finger_joint1 0.001
+    -J $(arg arm_id)_finger_joint2 0.001" if="$(arg use_sim)" />
+  
+  <!-- Anfangspositionen (nur für Simulation) 
+  <arg name="initial_joint_positions" default="
+    -J $(arg arm_id)_joint1 0
+    -J $(arg arm_id)_joint2 -1.358
+    -J $(arg arm_id)_joint3 0
+    -J $(arg arm_id)_joint4 -3
+    -J $(arg arm_id)_joint5 0
+    -J $(arg arm_id)_joint6 0.141
+    -J $(arg arm_id)_joint7 0.800
+    -J $(arg arm_id)_finger_joint1 0.001
+    -J $(arg arm_id)_finger_joint2 0.001" if="$(arg use_sim)" />-->
+
+  <!-- Roboter in Gazebo spawnen -->
+  <node name="$(arg arm_id)_model_spawner" pkg="gazebo_ros" type="spawn_model"
+        args="-param robot_description -urdf -model $(arg arm_id) $(arg unpause) $(arg initial_joint_positions)"
+        if="$(arg use_sim)" />
+
+
+  <!-- Controller für Simulation -->
+  <node pkg="controller_manager" type="spawner" name="$(arg arm_id)_gripper_spawner"
+        if="$(eval arg('use_sim') and arg('use_gripper'))"
+        args="franka_gripper" />
+
+  <node pkg="controller_manager" type="spawner" name="$(arg arm_id)_controller_spawner"
+        if="$(arg use_sim)"
+        args="--wait-for initialized franka_state_controller $(arg controller)" output="screen" />
+
+  <!-- Controller für realen Roboter -->
+  <include if="$(eval not arg('use_sim'))" file="$(find franka_control)/launch/franka_control.launch">
+    <arg name="robot_ip" value="$(arg robot_ip)" />
+    <arg name="load_gripper" value="$(arg use_gripper)" />
+  </include>
+
+
+  <!-- State Publisher (immer) -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" 
+  if="$(arg use_sim)"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"
+  if="$(arg use_sim)">
+    <rosparam param="source_list">[franka_state_controller/joint_states, franka_gripper/joint_states]</rosparam>
+    <param name="rate" value="30" />
+  </node>
+
+  <!-- MoveIt -->
+  <include file="$(find panda_moveit_config)/launch/demo.launch" pass_all_args="true">
+    <arg name="load_robot_description" value="false" />
+    <arg name="moveit_controller_manager" value="simple" />
+  </include>
+
+
+  <!-- Realsense Kamera (nur im realen Betrieb) -->
+  <node pkg="realsense2_camera" type="realsense2_camera_node" name="realsense_camera" output="screen" if="$(eval not arg('use_sim'))">
+    <param name="enable_depth" value="true" />
+    <param name="enable_color" value="true" />
+    <param name="enable_infra1" value="false" />
+    <param name="enable_infra2" value="false" />
+    <param name="align_depth" value="true" />
+    <param name="pointcloud.enable" value="true" />
+  </node>
+
+
+</launch>

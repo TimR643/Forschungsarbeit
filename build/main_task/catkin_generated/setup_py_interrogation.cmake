@@ -1,0 +1,7 @@
+set(main_task_SETUP_PY_SETUP_MODULE "setuptools")
+set(main_task_SETUP_PY_VERSION "0.0.0")
+set(main_task_SETUP_PY_SCRIPTS "")
+set(main_task_SETUP_PY_PACKAGES "")
+set(main_task_SETUP_PY_PACKAGE_DIRS "")
+set(main_task_SETUP_PY_MODULES "")
+set(main_task_SETUP_PY_MODULE_DIRS "")

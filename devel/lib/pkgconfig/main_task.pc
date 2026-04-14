@@ -1,0 +1,8 @@
+prefix=/home/roslab/catkin_ws/devel
+
+Name: main_task
+Description: Description of main_task
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
