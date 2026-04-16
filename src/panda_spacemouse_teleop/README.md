@@ -21,6 +21,12 @@ sudo apt install -y python3-pip libhidapi-dev
 python3 -m pip install --user "pyspacemouse<2.0"
 ```
 
+Ensure user scripts are on PATH (so `pyspacemouse` command is found):
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+
 
 > ROS Noetic uses Python 3.8 by default. `pyspacemouse` 2.x requires newer Python features (`dataclass(slots=...)`).
 > Therefore pin `pyspacemouse<2.0` on Noetic/Python 3.8.
@@ -61,7 +67,7 @@ source devel/setup.bash
 ## 3) Verify SpaceMouse input outside ROS
 
 ```bash
-python3 -m pyspacemouse --list-connected
+~/.local/bin/pyspacemouse --list-connected
 ```
 
 If your device is listed, input should be available.
@@ -130,7 +136,7 @@ python3 -m pip install --user "pyspacemouse<2.0"
 Then verify:
 
 ```bash
-python3 -m pyspacemouse --list-connected
+~/.local/bin/pyspacemouse --list-connected
 ```
 
 
@@ -138,3 +144,12 @@ python3 -m pyspacemouse --list-connected
 
 ROS1 parameter server (XMLRPC) cannot handle `null`/`None` values in launch-loaded params.
 Use `-1` for disabled optional button indices (e.g. `disable_button_index: -1`).
+
+
+### Troubleshooting: `No module named pyspacemouse.__main__`
+
+For `pyspacemouse<2.0`, use the CLI executable instead of `python -m`:
+
+```bash
+~/.local/bin/pyspacemouse --list-connected
+```
