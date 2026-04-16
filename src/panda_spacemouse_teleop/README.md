@@ -60,7 +60,7 @@ Run from your catkin workspace root (example: `~/catkin_ws`):
 ```bash
 cd ~/catkin_ws
 source /opt/ros/noetic/setup.bash
-catkin_make
+catkin_make --pkg panda_spacemouse_teleop
 source devel/setup.bash
 ```
 
@@ -71,6 +71,14 @@ source devel/setup.bash
 ```
 
 If your device is listed, input should be available.
+
+If `catkin_make` fails in unrelated packages (e.g. `realsense2_camera`), build only this package:
+
+```bash
+cd ~/catkin_ws
+catkin_make --pkg panda_spacemouse_teleop
+source devel/setup.bash
+```
 
 ## 4) Run teleop publisher
 
@@ -162,6 +170,6 @@ This package supports both APIs now; rebuild your workspace after pulling update
 
 ```bash
 cd ~/catkin_ws
-catkin_make
+catkin_make --pkg panda_spacemouse_teleop
 source devel/setup.bash
 ```
