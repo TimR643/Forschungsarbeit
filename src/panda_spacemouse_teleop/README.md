@@ -93,6 +93,21 @@ Published topics:
 - `/spacemouse/twist` (`geometry_msgs/Twist`)
 - `/spacemouse/enabled` (`std_msgs/Bool`)
 
+
+
+### One-command startup with Franka example velocity controller
+
+If `franka_control.launch` is already running, you can auto-load the
+`cartesian_velocity_example_controller` and start SpaceMouse teleop with one launch:
+
+```bash
+roslaunch panda_spacemouse_teleop spacemouse_franka_cartesian_velocity.launch
+```
+
+This launch sets the required controller params (`type`, `arm_id`, `joint_names`),
+spawns the controller, and remaps teleop output to
+`/cartesian_velocity_example_controller/command`.
+
 ## 5) Connect to your Panda controller topic
 
 If your controller expects a different topic, remap at launch:
