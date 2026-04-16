@@ -50,6 +50,12 @@ real-robot launch and automatically bring up SpaceMouse teleop + controller spaw
 roslaunch main_task start3.launch enable_spacemouse:=true
 ```
 The SpaceMouse output is remapped to `/cartesian_velocity_example_controller/command`.
+
+If your RealSense node crashes during teleop bring-up, you can temporarily disable
+camera startup while validating robot control:
+```bash
+roslaunch main_task start3.launch enable_spacemouse:=true enable_camera:=false
+```
 4. Wait until everything is started.
 5. Make sure that `main_yolo.py` is executable:
 ```bash
