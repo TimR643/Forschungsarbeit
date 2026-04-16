@@ -28,4 +28,5 @@ deadman_button_index: 0
 
 # Optional latch buttons to enable/disable teleop mode.
 enable_button_index: 1
-disable_button_index: null
+# Use -1 to disable an optional button index in ROS1 params (None/null is not XMLRPC-safe).
+disable_button_index: -1

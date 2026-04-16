@@ -89,6 +89,7 @@ Defaults in `config/teleop.yaml` are conservative:
 - `require_deadman: true`
 - `deadman_button_index: 0` (hold left button while moving)
 - `start_enabled: false` (press enable button index 1 to arm)
+- Set optional button indices to `-1` (disabled). Do not use `null` in ROS1 params.
 
 Edit `config/teleop.yaml` for axis inversion and scales.
 
@@ -123,3 +124,9 @@ Then verify:
 ```bash
 python3 -m pyspacemouse --list-connected
 ```
+
+
+### Troubleshooting: `cannot marshal None unless allow_none is enabled`
+
+ROS1 parameter server (XMLRPC) cannot handle `null`/`None` values in launch-loaded params.
+Use `-1` for disabled optional button indices (e.g. `disable_button_index: -1`).

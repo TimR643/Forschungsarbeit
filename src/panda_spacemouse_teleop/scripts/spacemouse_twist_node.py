@@ -34,6 +34,13 @@ def _button_pressed(state, index):
     return bool(buttons[index])
 
 
+def _normalize_button_index(value):
+    if value is None:
+        return None
+    idx = int(value)
+    return None if idx < 0 else idx
+
+
 class SpaceMouseTwistNode:
     def __init__(self):
         self.publish_rate = rospy.get_param("~publish_rate", 100.0)
@@ -53,9 +60,9 @@ class SpaceMouseTwistNode:
         self.invert_angular_z = rospy.get_param("~invert_angular_z", False)
 
         self.require_deadman = rospy.get_param("~require_deadman", True)
-        self.deadman_button_index = rospy.get_param("~deadman_button_index", 0)
-        self.enable_button_index = rospy.get_param("~enable_button_index", None)
-        self.disable_button_index = rospy.get_param("~disable_button_index", None)
+        self.deadman_button_index = int(rospy.get_param("~deadman_button_index", 0))
+        self.enable_button_index = _normalize_button_index(rospy.get_param("~enable_button_index", -1))
+        self.disable_button_index = _normalize_button_index(rospy.get_param("~disable_button_index", -1))
 
         self.enabled = rospy.get_param("~start_enabled", False)
 
