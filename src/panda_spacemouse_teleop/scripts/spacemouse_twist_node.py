@@ -107,7 +107,7 @@ class SpaceMouseTwistNode:
     def run(self):
         if pyspacemouse is None:
             rospy.logfatal("Could not initialize pyspacemouse: %s", IMPORT_ERROR)
-            rospy.logfatal("Hint: for ROS Noetic/Python 3.8 use: python3 -m pip install --user \"pyspacemouse<2.0\"")
+            rospy.logfatal("Hint (Noetic/Python 3.8): python3 -m pip uninstall -y pyspacemouse && python3 -m pip install --user \"pyspacemouse<2.0\"")
             raise RuntimeError("pyspacemouse unavailable or incompatible")
 
         rate = rospy.Rate(self.publish_rate)

@@ -25,6 +25,14 @@ python3 -m pip install --user "pyspacemouse<2.0"
 > ROS Noetic uses Python 3.8 by default. `pyspacemouse` 2.x requires newer Python features (`dataclass(slots=...)`).
 > Therefore pin `pyspacemouse<2.0` on Noetic/Python 3.8.
 
+
+If `pyspacemouse` was already installed, force reinstall a compatible version:
+
+```bash
+python3 -m pip uninstall -y pyspacemouse
+python3 -m pip install --user "pyspacemouse<2.0"
+```
+
 ### Optional: udev rule for hidraw access (recommended)
 
 ```bash
