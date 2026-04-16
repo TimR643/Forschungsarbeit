@@ -1,0 +1,13 @@
+<launch>
+  <arg name="config" default="$(find panda_spacemouse_teleop)/config/teleop.yaml"/>
+  <arg name="twist_topic" default="/spacemouse/twist"/>
+
+  <node pkg="panda_spacemouse_teleop"
+        type="spacemouse_twist_node.py"
+        name="spacemouse_twist_node"
+        output="screen">
+    <rosparam command="load" file="$(arg config)"/>
+    <remap from="~twist" to="$(arg twist_topic)"/>
+    <remap from="~enabled" to="/spacemouse/enabled"/>
+  </node>
+</launch>

@@ -1,0 +1,31 @@
+# Conservative defaults for first motion tests with Franka Panda.
+publish_rate: 100.0
+deadzone: 0.05
+
+# Absolute axis limits in SI units used for outgoing Twist.
+max_linear: 0.03   # m/s
+max_angular: 0.20  # rad/s
+
+# Additional normalized scale factors (0..1 typical).
+linear_scale: 1.0
+angular_scale: 1.0
+
+# Axis inversions, adjust for your setup.
+invert_linear_x: false
+invert_linear_y: false
+invert_linear_z: false
+invert_angular_x: false
+invert_angular_y: false
+invert_angular_z: false
+
+# Safety / enable logic.
+start_enabled: false
+require_deadman: true
+
+# Default SpaceMouse buttons: left=0, right=1
+# Hold deadman button while moving.
+deadman_button_index: 0
+
+# Optional latch buttons to enable/disable teleop mode.
+enable_button_index: 1
+disable_button_index: null
