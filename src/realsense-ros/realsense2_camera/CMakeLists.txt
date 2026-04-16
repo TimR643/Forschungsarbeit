@@ -4,7 +4,7 @@ add_compile_options(-std=c++11)
 
 option(BUILD_WITH_OPENMP "Use OpenMP" OFF)
 option(SET_USER_BREAK_AT_STARTUP "Set user wait point in startup (for debug)" OFF)
-option(BUILD_FRAMOS_CODE "Build wrapper with D400e camera support" ON)
+option(BUILD_FRAMOS_CODE "Build wrapper with D400e camera support" OFF)
 
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -54,7 +54,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(BUILD_FRAMOS_CODE)
-    add_definitions(-DFRAMOS)
+    add_definitions(-DFRAMOS -DRS2_USE_D400E_EXTENSIONS)
 endif()
 
 string(TOUPPER "${CMAKE_BUILD_TYPE}" uppercase_CMAKE_BUILD_TYPE)
@@ -165,4 +165,3 @@ install(DIRECTORY rviz/
 install(FILES nodelet_plugins.xml
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
     )
-
