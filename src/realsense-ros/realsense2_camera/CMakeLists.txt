@@ -4,7 +4,7 @@ add_compile_options(-std=c++11)
 
 option(BUILD_WITH_OPENMP "Use OpenMP" OFF)
 option(SET_USER_BREAK_AT_STARTUP "Set user wait point in startup (for debug)" OFF)
-option(BUILD_FRAMOS_CODE "Build wrapper with D400e camera support" OFF)
+option(BUILD_FRAMOS_CODE "Build wrapper with D400e camera support" ON)
 
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
