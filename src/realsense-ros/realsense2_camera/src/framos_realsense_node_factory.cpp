@@ -13,7 +13,7 @@
 #include <sys/time.h>
 #include <regex>
 
-#if defined(RS2_USE_D400E_EXTENSIONS)
+#if defined(RS2_USE_D400E_EXTENSIONS) && __has_include(<librealsense2/rs_d400e.h>) && __has_include(<librealsense2/hpp/rs_d400e.hpp>)
 #include <librealsense2/rs_d400e.h>
 #include <librealsense2/hpp/rs_d400e.hpp>
 #define HAS_RS2_D400E 1
