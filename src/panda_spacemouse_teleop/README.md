@@ -18,8 +18,12 @@ sudo apt install -y python3-pip libhidapi-dev
 ### Python package
 
 ```bash
-pip3 install --user pyspacemouse
+python3 -m pip install --user "pyspacemouse<2.0"
 ```
+
+
+> ROS Noetic uses Python 3.8 by default. `pyspacemouse` 2.x requires newer Python features (`dataclass(slots=...)`).
+> Therefore pin `pyspacemouse<2.0` on Noetic/Python 3.8.
 
 ### Optional: udev rule for hidraw access (recommended)
 
@@ -37,10 +41,10 @@ Then log out and in again.
 
 ## 2) Build the catkin workspace
 
-Run from your workspace root (this repo):
+Run from your catkin workspace root (example: `~/catkin_ws`):
 
 ```bash
-cd /workspace/Forschungsarbeit
+cd ~/catkin_ws
 source /opt/ros/noetic/setup.bash
 catkin_make
 source devel/setup.bash
@@ -49,7 +53,7 @@ source devel/setup.bash
 ## 3) Verify SpaceMouse input outside ROS
 
 ```bash
-pyspacemouse --list-connected
+python3 -m pyspacemouse --list-connected
 ```
 
 If your device is listed, input should be available.
@@ -57,7 +61,7 @@ If your device is listed, input should be available.
 ## 4) Run teleop publisher
 
 ```bash
-cd /workspace/Forschungsarbeit
+cd ~/catkin_ws
 source /opt/ros/noetic/setup.bash
 source devel/setup.bash
 roslaunch panda_spacemouse_teleop spacemouse_teleop.launch
@@ -94,7 +98,7 @@ In another terminal:
 
 ```bash
 source /opt/ros/noetic/setup.bash
-source /workspace/Forschungsarbeit/devel/setup.bash
+source ~/catkin_ws/devel/setup.bash
 rostopic echo /spacemouse/enabled
 rostopic echo /spacemouse/twist
 ```
@@ -103,3 +107,19 @@ rostopic echo /spacemouse/twist
 
 - This package only publishes `Twist`; your Panda motion depends on the controller consuming that topic.
 - Start in a safe workspace, with E-stop available, low speeds, and collision-free conditions.
+
+
+### Troubleshooting: `TypeError: dataclass() got an unexpected keyword argument "slots"`
+
+You installed an incompatible `pyspacemouse` major version on Python 3.8. Reinstall pinned version:
+
+```bash
+python3 -m pip uninstall -y pyspacemouse
+python3 -m pip install --user "pyspacemouse<2.0"
+```
+
+Then verify:
+
+```bash
+python3 -m pyspacemouse --list-connected
+```

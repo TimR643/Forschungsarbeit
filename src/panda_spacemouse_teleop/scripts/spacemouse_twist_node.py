@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 
-import math
-
 import rospy
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
 
 try:
     import pyspacemouse
-except ImportError as exc:
+except Exception as exc:
     pyspacemouse = None
     IMPORT_ERROR = exc
 else:
@@ -101,8 +99,9 @@ class SpaceMouseTwistNode:
 
     def run(self):
         if pyspacemouse is None:
-            rospy.logfatal("Could not import pyspacemouse: %s", IMPORT_ERROR)
-            raise RuntimeError("pyspacemouse missing")
+            rospy.logfatal("Could not initialize pyspacemouse: %s", IMPORT_ERROR)
+            rospy.logfatal("Hint: for ROS Noetic/Python 3.8 use: python3 -m pip install --user \"pyspacemouse<2.0\"")
+            raise RuntimeError("pyspacemouse unavailable or incompatible")
 
         rate = rospy.Rate(self.publish_rate)
 
