@@ -112,26 +112,59 @@ class SpaceMouseTwistNode:
 
         rate = rospy.Rate(self.publish_rate)
 
-        with pyspacemouse.open() as device:
-            while not rospy.is_shutdown():
-                state = device.read()
-                if state is None:
+        opened = pyspacemouse.open()
+
+        # pyspacemouse >=2.0: context manager/device object with .read()
+        # pyspacemouse 1.x: open() returns bool and read() is module-level
+        if hasattr(opened, "__enter__"):
+            with opened as device:
+                while not rospy.is_shutdown():
+                    state = device.read()
+                    if state is None:
+                        rate.sleep()
+                        continue
+
+                    self._update_enable_state(state)
+
+                    deadman_ok = True
+                    if self.require_deadman:
+                        deadman_ok = _button_pressed(state, int(self.deadman_button_index))
+
+                    if self.enabled and deadman_ok:
+                        twist = self._compute_twist(state)
+                    else:
+                        twist = Twist()
+
+                    self.twist_pub.publish(twist)
                     rate.sleep()
-                    continue
+        else:
+            if not opened:
+                raise RuntimeError("Could not open SpaceMouse device")
 
-                self._update_enable_state(state)
+            try:
+                while not rospy.is_shutdown():
+                    state = pyspacemouse.read()
+                    if state is None:
+                        rate.sleep()
+                        continue
 
-                deadman_ok = True
-                if self.require_deadman:
-                    deadman_ok = _button_pressed(state, int(self.deadman_button_index))
+                    self._update_enable_state(state)
 
-                if self.enabled and deadman_ok:
-                    twist = self._compute_twist(state)
-                else:
-                    twist = Twist()
+                    deadman_ok = True
+                    if self.require_deadman:
+                        deadman_ok = _button_pressed(state, int(self.deadman_button_index))
 
-                self.twist_pub.publish(twist)
-                rate.sleep()
+                    if self.enabled and deadman_ok:
+                        twist = self._compute_twist(state)
+                    else:
+                        twist = Twist()
+
+                    self.twist_pub.publish(twist)
+                    rate.sleep()
+            finally:
+                close_fn = getattr(pyspacemouse, "close", None)
+                if callable(close_fn):
+                    close_fn()
 
 
 def main():

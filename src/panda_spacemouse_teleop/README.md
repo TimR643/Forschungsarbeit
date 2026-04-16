@@ -67,7 +67,7 @@ source devel/setup.bash
 ## 3) Verify SpaceMouse input outside ROS
 
 ```bash
-~/.local/bin/pyspacemouse --list-connected
+~/.local/bin/pyspacemouse --list-spacemouse
 ```
 
 If your device is listed, input should be available.
@@ -136,7 +136,7 @@ python3 -m pip install --user "pyspacemouse<2.0"
 Then verify:
 
 ```bash
-~/.local/bin/pyspacemouse --list-connected
+~/.local/bin/pyspacemouse --list-spacemouse
 ```
 
 
@@ -148,8 +148,20 @@ Use `-1` for disabled optional button indices (e.g. `disable_button_index: -1`).
 
 ### Troubleshooting: `No module named pyspacemouse.__main__`
 
-For `pyspacemouse<2.0`, use the CLI executable instead of `python -m`:
+For `pyspacemouse<2.0`, use the CLI executable instead of `python -m` (and use `--list-spacemouse`):
 
 ```bash
-~/.local/bin/pyspacemouse --list-connected
+~/.local/bin/pyspacemouse --list-spacemouse
+```
+
+
+### Troubleshooting: `AttributeError: __enter__`
+
+`pyspacemouse` 1.x does not expose the same context-manager API as 2.x.
+This package supports both APIs now; rebuild your workspace after pulling updates:
+
+```bash
+cd ~/catkin_ws
+catkin_make
+source devel/setup.bash
 ```
