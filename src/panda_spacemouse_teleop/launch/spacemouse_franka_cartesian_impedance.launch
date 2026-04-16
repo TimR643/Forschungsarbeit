@@ -1,0 +1,35 @@
+<launch>
+  <!--
+    Recommended SpaceMouse control path for Franka examples:
+    SpaceMouse -> Twist -> Equilibrium Pose -> CartesianImpedanceExampleController
+
+    Assumes franka_control.launch is already running.
+  -->
+
+  <arg name="config" default="$(find panda_spacemouse_teleop)/config/teleop.yaml"/>
+
+  <rosparam param="/cartesian_impedance_example_controller/type">franka_example_controllers/CartesianImpedanceExampleController</rosparam>
+  <rosparam param="/cartesian_impedance_example_controller/arm_id">panda</rosparam>
+  <rosparam param="/cartesian_impedance_example_controller/joint_names">[panda_joint1, panda_joint2, panda_joint3, panda_joint4, panda_joint5, panda_joint6, panda_joint7]</rosparam>
+
+  <node pkg="controller_manager"
+        type="spawner"
+        name="cartesian_impedance_example_controller_spawner"
+        args="cartesian_impedance_example_controller"
+        output="screen"/>
+
+  <include file="$(find panda_spacemouse_teleop)/launch/spacemouse_teleop.launch">
+    <arg name="config" value="$(arg config)"/>
+    <arg name="twist_topic" value="/spacemouse/twist"/>
+  </include>
+
+  <node pkg="panda_spacemouse_teleop"
+        type="spacemouse_equilibrium_pose_node.py"
+        name="spacemouse_equilibrium_pose_node"
+        output="screen">
+    <remap from="~twist_in" to="/spacemouse/twist"/>
+    <remap from="~enabled_in" to="/spacemouse/enabled"/>
+    <remap from="~franka_state" to="/franka_state_controller/franka_states"/>
+    <remap from="~equilibrium_pose" to="/cartesian_impedance_example_controller/equilibrium_pose"/>
+  </node>
+</launch>

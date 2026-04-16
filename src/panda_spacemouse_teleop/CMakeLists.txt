@@ -13,6 +13,7 @@ catkin_package()
 
 catkin_install_python(PROGRAMS
   scripts/spacemouse_twist_node.py
+  scripts/spacemouse_equilibrium_pose_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

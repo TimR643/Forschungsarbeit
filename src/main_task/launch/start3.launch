@@ -2,7 +2,6 @@
   <arg name="enable_spacemouse" default="false" />
   <arg name="enable_camera" default="true" />
   <arg name="spacemouse_config" default="$(find panda_spacemouse_teleop)/config/teleop.yaml" />
-  <arg name="spacemouse_twist_topic" default="/cartesian_velocity_example_controller/command" />
 
   <include if="$(arg enable_camera)" file="$(find realsense2_camera)/launch/rs_camera.launch">
     <arg name="color_width" value="640" />
@@ -19,19 +18,7 @@
   </include>
 
   <!-- Optional SpaceMouse teleop integration for the real robot setup. -->
-  <rosparam if="$(arg enable_spacemouse)" param="/cartesian_velocity_example_controller/type">franka_example_controllers/CartesianVelocityExampleController</rosparam>
-  <rosparam if="$(arg enable_spacemouse)" param="/cartesian_velocity_example_controller/arm_id">panda</rosparam>
-  <rosparam if="$(arg enable_spacemouse)" param="/cartesian_velocity_example_controller/joint_names">[panda_joint1, panda_joint2, panda_joint3, panda_joint4, panda_joint5, panda_joint6, panda_joint7]</rosparam>
-
-  <node if="$(arg enable_spacemouse)"
-        pkg="controller_manager"
-        type="spawner"
-        name="cartesian_velocity_example_controller_spawner"
-        args="cartesian_velocity_example_controller"
-        output="screen" />
-
-  <include if="$(arg enable_spacemouse)" file="$(find panda_spacemouse_teleop)/launch/spacemouse_teleop.launch">
+  <include if="$(arg enable_spacemouse)" file="$(find panda_spacemouse_teleop)/launch/spacemouse_franka_cartesian_impedance.launch">
     <arg name="config" value="$(arg spacemouse_config)" />
-    <arg name="twist_topic" value="$(arg spacemouse_twist_topic)" />
   </include>
 </launch>

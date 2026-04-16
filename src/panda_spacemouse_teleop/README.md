@@ -95,6 +95,17 @@ Published topics:
 
 
 
+
+
+### Recommended for Franka examples: Cartesian impedance path
+
+This path gives external SpaceMouse control by converting Twist commands into
+`equilibrium_pose` updates for `cartesian_impedance_example_controller`:
+
+```bash
+roslaunch panda_spacemouse_teleop spacemouse_franka_cartesian_impedance.launch
+```
+
 ### One-command startup with Franka example velocity controller
 
 If `franka_control.launch` is already running, you can auto-load the

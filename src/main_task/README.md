@@ -49,7 +49,8 @@ real-robot launch and automatically bring up SpaceMouse teleop + controller spaw
 ```bash
 roslaunch main_task start3.launch enable_spacemouse:=true
 ```
-The SpaceMouse output is remapped to `/cartesian_velocity_example_controller/command`.
+This uses the Cartesian impedance example controller and publishes equilibrium poses to
+`/cartesian_impedance_example_controller/equilibrium_pose`.
 
 If your RealSense node crashes during teleop bring-up, you can temporarily disable
 camera startup while validating robot control:
