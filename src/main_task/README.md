@@ -42,6 +42,14 @@ catkin_make
 roslaunch main_task start3.launch
 ```
 It will start all necessary packages
+
+### Optional: Start with SpaceMouse teleop integrated
+If `panda_spacemouse_teleop` is in the same workspace, you can start the existing
+real-robot launch and automatically bring up SpaceMouse teleop + controller spawner:
+```bash
+roslaunch main_task start3.launch enable_spacemouse:=true
+```
+The SpaceMouse output is remapped to `/cartesian_velocity_example_controller/command`.
 4. Wait until everything is started.
 5. Make sure that `main_yolo.py` is executable:
 ```bash
