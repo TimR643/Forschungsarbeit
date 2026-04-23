@@ -10,18 +10,24 @@ max_angular: 0.30  # rad/s
 linear_scale: 1.0
 angular_scale: 1.0
 
+# Linear axis mapping (valid: x, y, z).
+# Rotated 90° so left/right feels natural without physically rotating the device.
+linear_axis_map_x: y
+linear_axis_map_y: x
+linear_axis_map_z: z
+
 # Angular axis mapping (valid: roll, pitch, yaw).
-# Tuned so forward/back tilt controls wrist rotation (joint 7) more directly.
+# yaw -> wrist spin (joint 7), pitch -> wrist bend (joint 6), roll -> wrist roll (joint 5)
 angular_axis_map_x: roll
-angular_axis_map_y: yaw
-angular_axis_map_z: pitch
+angular_axis_map_y: pitch
+angular_axis_map_z: yaw
 
 # Axis inversions, adjust for your setup.
 invert_linear_x: false
-invert_linear_y: false
+invert_linear_y: true
 invert_linear_z: false
 invert_angular_x: false
-invert_angular_y: true
+invert_angular_y: false
 invert_angular_z: false
 
 # Safety / enable logic.

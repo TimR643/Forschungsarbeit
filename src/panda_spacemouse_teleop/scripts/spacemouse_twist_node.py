@@ -81,6 +81,11 @@ class SpaceMouseTwistNode:
         self.linear_scale = rospy.get_param("~linear_scale", 1.0)
         self.angular_scale = rospy.get_param("~angular_scale", 1.0)
 
+        # Optional axis remap for linear commands (valid: x, y, z).
+        self.linear_axis_map_x = str(rospy.get_param("~linear_axis_map_x", "y"))
+        self.linear_axis_map_y = str(rospy.get_param("~linear_axis_map_y", "x"))
+        self.linear_axis_map_z = str(rospy.get_param("~linear_axis_map_z", "z"))
+
         self.invert_linear_x = rospy.get_param("~invert_linear_x", False)
         self.invert_linear_y = rospy.get_param("~invert_linear_y", False)
         self.invert_linear_z = rospy.get_param("~invert_linear_z", False)
@@ -90,8 +95,8 @@ class SpaceMouseTwistNode:
 
         # Optional axis remap for angular commands (valid: roll, pitch, yaw).
         self.angular_axis_map_x = str(rospy.get_param("~angular_axis_map_x", "roll"))
-        self.angular_axis_map_y = str(rospy.get_param("~angular_axis_map_y", "yaw"))
-        self.angular_axis_map_z = str(rospy.get_param("~angular_axis_map_z", "pitch"))
+        self.angular_axis_map_y = str(rospy.get_param("~angular_axis_map_y", "pitch"))
+        self.angular_axis_map_z = str(rospy.get_param("~angular_axis_map_z", "yaw"))
 
         self.require_deadman = rospy.get_param("~require_deadman", False)
         self.deadman_button_index = int(rospy.get_param("~deadman_button_index", 0))
@@ -142,9 +147,9 @@ class SpaceMouseTwistNode:
         rospy.loginfo("spacemouse_twist_node started. enabled=%s", self.enabled)
 
     def _compute_twist(self, state):
-        lx = _signed(_apply_deadzone(getattr(state, "x", 0.0), self.deadzone), self.invert_linear_x)
-        ly = _signed(_apply_deadzone(getattr(state, "y", 0.0), self.deadzone), self.invert_linear_y)
-        lz = _signed(_apply_deadzone(getattr(state, "z", 0.0), self.deadzone), self.invert_linear_z)
+        lx = _signed(_apply_deadzone(_axis_value(state, self.linear_axis_map_x), self.deadzone), self.invert_linear_x)
+        ly = _signed(_apply_deadzone(_axis_value(state, self.linear_axis_map_y), self.deadzone), self.invert_linear_y)
+        lz = _signed(_apply_deadzone(_axis_value(state, self.linear_axis_map_z), self.deadzone), self.invert_linear_z)
 
         ax = _signed(_apply_deadzone(_axis_value(state, self.angular_axis_map_x), self.deadzone), self.invert_angular_x)
         ay = _signed(_apply_deadzone(_axis_value(state, self.angular_axis_map_y), self.deadzone), self.invert_angular_y)
