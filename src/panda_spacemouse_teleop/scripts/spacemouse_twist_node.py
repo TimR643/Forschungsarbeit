@@ -53,6 +53,23 @@ def _normalize_button_index(value):
     return None if idx < 0 else idx
 
 
+
+def _axis_value(state, axis_name):
+    if axis_name == "x":
+        return getattr(state, "x", 0.0)
+    if axis_name == "y":
+        return getattr(state, "y", 0.0)
+    if axis_name == "z":
+        return getattr(state, "z", 0.0)
+    if axis_name == "roll":
+        return getattr(state, "roll", 0.0)
+    if axis_name == "pitch":
+        return getattr(state, "pitch", 0.0)
+    if axis_name == "yaw":
+        return getattr(state, "yaw", 0.0)
+    return 0.0
+
+
 class SpaceMouseTwistNode:
     def __init__(self):
         self.publish_rate = rospy.get_param("~publish_rate", 100.0)
@@ -70,6 +87,11 @@ class SpaceMouseTwistNode:
         self.invert_angular_x = rospy.get_param("~invert_angular_x", False)
         self.invert_angular_y = rospy.get_param("~invert_angular_y", False)
         self.invert_angular_z = rospy.get_param("~invert_angular_z", False)
+
+        # Optional axis remap for angular commands (valid: roll, pitch, yaw).
+        self.angular_axis_map_x = str(rospy.get_param("~angular_axis_map_x", "roll"))
+        self.angular_axis_map_y = str(rospy.get_param("~angular_axis_map_y", "yaw"))
+        self.angular_axis_map_z = str(rospy.get_param("~angular_axis_map_z", "pitch"))
 
         self.require_deadman = rospy.get_param("~require_deadman", False)
         self.deadman_button_index = int(rospy.get_param("~deadman_button_index", 0))
@@ -122,9 +144,9 @@ class SpaceMouseTwistNode:
         ly = _signed(_apply_deadzone(getattr(state, "y", 0.0), self.deadzone), self.invert_linear_y)
         lz = _signed(_apply_deadzone(getattr(state, "z", 0.0), self.deadzone), self.invert_linear_z)
 
-        ax = _signed(_apply_deadzone(getattr(state, "roll", 0.0), self.deadzone), self.invert_angular_x)
-        ay = _signed(_apply_deadzone(getattr(state, "pitch", 0.0), self.deadzone), self.invert_angular_y)
-        az = _signed(_apply_deadzone(getattr(state, "yaw", 0.0), self.deadzone), self.invert_angular_z)
+        ax = _signed(_apply_deadzone(_axis_value(state, self.angular_axis_map_x), self.deadzone), self.invert_angular_x)
+        ay = _signed(_apply_deadzone(_axis_value(state, self.angular_axis_map_y), self.deadzone), self.invert_angular_y)
+        az = _signed(_apply_deadzone(_axis_value(state, self.angular_axis_map_z), self.deadzone), self.invert_angular_z)
 
         twist = Twist()
         twist.linear.x = _clamp(lx * self.linear_scale * self.max_linear, self.max_linear)
