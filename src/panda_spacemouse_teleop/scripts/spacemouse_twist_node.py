@@ -104,7 +104,9 @@ class SpaceMouseTwistNode:
         self.gripper_close_button_index = _normalize_button_index(rospy.get_param("~gripper_close_button_index", 1))
         self.gripper_close_width = float(rospy.get_param("~gripper_close_width", 0.0))
         self.gripper_close_speed = float(rospy.get_param("~gripper_close_speed", 0.03))
-        self.gripper_close_force = float(rospy.get_param("~gripper_close_force", 40.0))
+        self.gripper_close_force = float(rospy.get_param("~gripper_close_force", 70.0))
+        self.gripper_close_epsilon_inner = float(rospy.get_param("~gripper_close_epsilon_inner", 0.002))
+        self.gripper_close_epsilon_outer = float(rospy.get_param("~gripper_close_epsilon_outer", 0.002))
 
         self.gripper_open_button_index = _normalize_button_index(rospy.get_param("~gripper_open_button_index", 0))
         self.gripper_open_width = float(rospy.get_param("~gripper_open_width", 0.08))
@@ -190,11 +192,12 @@ class SpaceMouseTwistNode:
                 goal.width = self.gripper_close_width
                 goal.speed = self.gripper_close_speed
                 goal.force = self.gripper_close_force
-                goal.epsilon.inner = 0.01
-                goal.epsilon.outer = 0.01
+                goal.epsilon.inner = self.gripper_close_epsilon_inner
+                goal.epsilon.outer = self.gripper_close_epsilon_outer
 
-                rospy.loginfo("SpaceMouse short press: closing gripper (width=%.3f, speed=%.3f, force=%.1f)",
-                              self.gripper_close_width, self.gripper_close_speed, self.gripper_close_force)
+                rospy.loginfo("SpaceMouse short press: closing gripper (width=%.3f, speed=%.3f, force=%.1f, eps_in=%.4f, eps_out=%.4f)",
+                              self.gripper_close_width, self.gripper_close_speed, self.gripper_close_force,
+                              self.gripper_close_epsilon_inner, self.gripper_close_epsilon_outer)
                 self.gripper_close_client.send_goal(goal)
                 self.gripper_close_client.wait_for_result(rospy.Duration(self.gripper_action_timeout))
             finally:

@@ -48,6 +48,8 @@ gripper_open_speed: 0.05
 gripper_close_button_index: 1
 gripper_close_width: 0.0
 gripper_close_speed: 0.03
-gripper_close_force: 40.0
+gripper_close_force: 70.0
+gripper_close_epsilon_inner: 0.002
+gripper_close_epsilon_outer: 0.002
 
 gripper_action_timeout: 5.0
