@@ -3,8 +3,8 @@ publish_rate: 100.0
 deadzone: 0.05
 
 # Absolute axis limits in SI units used for outgoing Twist.
-max_linear: 0.03   # m/s
-max_angular: 0.20  # rad/s
+max_linear: 0.05   # m/s
+max_angular: 0.30  # rad/s
 
 # Additional normalized scale factors (0..1 typical).
 linear_scale: 1.0
@@ -15,7 +15,7 @@ invert_linear_x: false
 invert_linear_y: false
 invert_linear_z: false
 invert_angular_x: false
-invert_angular_y: false
+invert_angular_y: true
 invert_angular_z: false
 
 # Safety / enable logic.
