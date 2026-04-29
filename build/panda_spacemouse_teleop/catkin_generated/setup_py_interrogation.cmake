@@ -1,0 +1,7 @@
+set(panda_spacemouse_teleop_SETUP_PY_SETUP_MODULE "distutils.core")
+set(panda_spacemouse_teleop_SETUP_PY_VERSION "0.1.0")
+set(panda_spacemouse_teleop_SETUP_PY_SCRIPTS "")
+set(panda_spacemouse_teleop_SETUP_PY_PACKAGES "")
+set(panda_spacemouse_teleop_SETUP_PY_PACKAGE_DIRS "")
+set(panda_spacemouse_teleop_SETUP_PY_MODULES "")
+set(panda_spacemouse_teleop_SETUP_PY_MODULE_DIRS "")

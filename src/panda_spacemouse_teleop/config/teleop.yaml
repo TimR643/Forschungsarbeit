@@ -23,11 +23,11 @@ angular_axis_map_y: pitch
 angular_axis_map_z: yaw
 
 # Axis inversions, adjust for your setup.
-invert_linear_x: false
-invert_linear_y: true
+invert_linear_x: true
+invert_linear_y: false
 invert_linear_z: false
-invert_angular_x: false
-invert_angular_y: false
+invert_angular_x: true
+invert_angular_y: true
 invert_angular_z: false
 
 # Safety / enable logic.
@@ -52,10 +52,10 @@ gripper_open_width: 0.08
 gripper_open_speed: 0.05
 
 gripper_close_button_index: 1
-gripper_close_width: 0.0
+gripper_close_width: 0.025
 gripper_close_speed: 0.02
-gripper_close_force: 100.0
-gripper_close_epsilon_inner: 0.0
-gripper_close_epsilon_outer: 0.0
+gripper_close_force: 40.0
+gripper_close_epsilon_inner: 0.01
+gripper_close_epsilon_outer: 0.01
 
 gripper_action_timeout: 5.0
