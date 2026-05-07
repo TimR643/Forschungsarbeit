@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(realsense2_camera)
+include(CheckCXXSourceCompiles)
+
 add_compile_options(-std=c++11)
 
 option(BUILD_WITH_OPENMP "Use OpenMP" OFF)
@@ -55,6 +57,24 @@ endif()
 
 if(BUILD_FRAMOS_CODE)
     add_definitions(-DFRAMOS)
+
+    set(CMAKE_REQUIRED_INCLUDES ${realsense2_INCLUDE_DIR})
+    check_cxx_source_compiles("
+        #include <librealsense2/rs_d400e.h>
+        #include <librealsense2/hpp/rs_d400e.hpp>
+        int main() {
+          rs2::d400e::cli_arg carg;
+          (void)carg;
+          return 0;
+        }
+    " RS2_D400E_COMPILES)
+
+    if(RS2_D400E_COMPILES)
+        add_definitions(-DRS2_USE_D400E_EXTENSIONS)
+        message(STATUS "FRAMOS D400e extensions enabled")
+    else()
+        message(WARNING "FRAMOS D400e headers are present but incompatible with current librealsense. Building without D400e extensions.")
+    endif()
 endif()
 
 string(TOUPPER "${CMAKE_BUILD_TYPE}" uppercase_CMAKE_BUILD_TYPE)
@@ -165,4 +185,3 @@ install(DIRECTORY rviz/
 install(FILES nodelet_plugins.xml
     DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
     )
-

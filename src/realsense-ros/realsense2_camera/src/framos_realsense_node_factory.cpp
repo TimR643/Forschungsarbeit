@@ -13,6 +13,14 @@
 #include <sys/time.h>
 #include <regex>
 
+#if defined(RS2_USE_D400E_EXTENSIONS) && __has_include(<librealsense2/rs_d400e.h>) && __has_include(<librealsense2/hpp/rs_d400e.hpp>)
+#include <librealsense2/rs_d400e.h>
+#include <librealsense2/hpp/rs_d400e.hpp>
+#define HAS_RS2_D400E 1
+#else
+#define HAS_RS2_D400E 0
+#endif
+
 using namespace realsense2_camera;
 
 #define REALSENSE_ROS_EMBEDDED_VERSION_STR (VAR_ARG_STRING(VERSION: REALSENSE_ROS_MAJOR_VERSION.REALSENSE_ROS_MINOR_VERSION.REALSENSE_ROS_PATCH_VERSION))
@@ -94,6 +102,7 @@ std::string FramosRealSenseNodeFactory::parse_usb_port(std::string line)
 
 void FramosRealSenseNodeFactory::setRs2CliArgs()
 {
+#if HAS_RS2_D400E
     if (_ctx != nullptr) {
         ROS_ERROR("rs2_d400e_set_cli_args must be called before rs2::context initialization!");
         return;
@@ -125,10 +134,14 @@ void FramosRealSenseNodeFactory::setRs2CliArgs()
     if (args.size() > 0) {
         rs2::d400e::set_cli_args(carg);
     }
+#else
+    ROS_WARN_ONCE("FRAMOS d400e extensions are not available in this librealsense build. dev_filter is ignored.");
+#endif
 }
 
 void FramosRealSenseNodeFactory::setDeviceFilterList()
 {
+#if HAS_RS2_D400E
     std::vector<rs2_d400e_filter> filter_list;
     rs2_d400e_filter filter;
     filter.serial_range.begin = 0;
@@ -152,6 +165,9 @@ void FramosRealSenseNodeFactory::setDeviceFilterList()
     if (filter_list.size() > 0) {
         rs2::d400e::set_device_filter_list(filter_list);
     }
+#else
+    ROS_WARN_ONCE("FRAMOS d400e extensions are not available in this librealsense build. Device filter list is ignored.");
+#endif
 }
 
 uint64_t FramosRealSenseNodeFactory::serialFromString(const std::string& serial)

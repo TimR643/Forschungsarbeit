@@ -1,5 +1,9 @@
 <launch>
-  <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+  <arg name="enable_spacemouse" default="false" />
+  <arg name="enable_camera" default="true" />
+  <arg name="spacemouse_config" default="$(find panda_spacemouse_teleop)/config/teleop.yaml" />
+
+  <include if="$(arg enable_camera)" file="$(find realsense2_camera)/launch/rs_camera.launch">
     <arg name="color_width" value="640" />
     <arg name="color_height" value="480" />
     <arg name="color_fps" value="15" />
@@ -9,7 +13,12 @@
   </include>
 
 
-  <include file="$(find panda_moveit_config)/launch/franka_control.launch" pass_all_args="true">
+  <include file="$(find franka_control)/launch/franka_control.launch" pass_all_args="true">
     <arg name="robot_ip" value="172.16.0.2" />
+  </include>
+
+  <!-- Optional SpaceMouse teleop integration for the real robot setup. -->
+  <include if="$(arg enable_spacemouse)" file="$(find panda_spacemouse_teleop)/launch/spacemouse_franka_cartesian_impedance.launch">
+    <arg name="config" value="$(arg spacemouse_config)" />
   </include>
 </launch>

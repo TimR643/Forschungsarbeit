@@ -1,0 +1,61 @@
+# Conservative defaults for first motion tests with Franka Panda.
+publish_rate: 100.0
+deadzone: 0.05
+
+# Absolute axis limits in SI units used for outgoing Twist.
+max_linear: 0.05   # m/s
+max_angular: 0.30  # rad/s
+
+# Additional normalized scale factors (0..1 typical).
+linear_scale: 1.0
+angular_scale: 1.0
+
+# Linear axis mapping (valid: x, y, z).
+# Rotated 90° so left/right feels natural without physically rotating the device.
+linear_axis_map_x: y
+linear_axis_map_y: x
+linear_axis_map_z: z
+
+# Angular axis mapping (valid: roll, pitch, yaw).
+# yaw -> wrist spin (joint 7), pitch -> wrist bend (joint 6), roll -> wrist roll (joint 5)
+angular_axis_map_x: roll
+angular_axis_map_y: pitch
+angular_axis_map_z: yaw
+
+# Axis inversions, adjust for your setup.
+invert_linear_x: true
+invert_linear_y: false
+invert_linear_z: false
+invert_angular_x: true
+invert_angular_y: true
+invert_angular_z: false
+
+# Safety / enable logic.
+start_enabled: true
+require_deadman: false
+
+# Deadman index kept for compatibility if require_deadman is re-enabled.
+deadman_button_index: 0
+
+# Optional latch buttons to enable/disable teleop mode.
+# Use -1 to disable optional button indices in ROS1 params (None/null is not XMLRPC-safe).
+enable_button_index: -1
+disable_button_index: -1
+
+# Gripper integration:
+# - short press left button (0): open gripper
+# - short press right button (1): close gripper
+gripper_short_press_max_duration: 0.35
+
+gripper_open_button_index: 0
+gripper_open_width: 0.08
+gripper_open_speed: 0.05
+
+gripper_close_button_index: 1
+gripper_close_width: 0.025
+gripper_close_speed: 0.02
+gripper_close_force: 40.0
+gripper_close_epsilon_inner: 0.01
+gripper_close_epsilon_outer: 0.01
+
+gripper_action_timeout: 5.0

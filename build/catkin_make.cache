@@ -1,2 +1,2 @@
-main_task:realsense-ros/realsense2_camera:realsense-ros/realsense2_description
+main_task:panda_spacemouse_teleop
 -DCATKIN_DEVEL_PREFIX=/home/roslab/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/roslab/catkin_ws/install -G Unix Makefiles
